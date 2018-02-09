@@ -1,0 +1,10 @@
+//
+// Created by rtxux on 2018/2/9.
+//
+
+#ifndef OBJECT_ORIENTED_CONSTANTS_H
+#define OBJECT_ORIENTED_CONSTANTS_H
+
+#define NUM_PASSENGERS 5
+
+#endif //OBJECT_ORIENTED_CONSTANTS_H
