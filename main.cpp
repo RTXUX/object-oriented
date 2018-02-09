@@ -8,11 +8,11 @@ int main() {
     Scheduler scheduler(world);
     world.setElevator(&elevator);
     world.setScheduler(&scheduler);
-    int a, b, c;
+    int requestTime, initialFloor, destination;
     for (int i = 0; i < NUM_PASSENGERS; i++) {
-        scanf("%d %d %d", &a, &b, &c);
-        if (c == 0) c = 10;
-        world.getPendingPassengers().emplace_back(a, b, c);
+        scanf("%d %d %d", &requestTime, &initialFloor, &destination);
+        if (destination == 0) destination = 10;
+        world.getPendingPassengers().emplace_back(requestTime, initialFloor, destination);
     }
     printf("%d", world.run());
     return 0;

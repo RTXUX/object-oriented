@@ -14,11 +14,11 @@ int Scheduler::decide() {
     //处理已触发请求的入厢
     for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end(); iter++) {
         if ((*iter).getInitialFloor() == currentFloor) {
-            if ((*iter).getDestinstaion() == 10 && (lastDecision == 1 || lastDecision == 0)) {
+            if ((*iter).getDestinstaion() == 10 && (direction == 1 || direction == 0)) {
                 pending = 1;
                 break;
             }
-            if ((*iter).getDestinstaion() == 1 && (lastDecision == -1 || lastDecision == 0)) {
+            if ((*iter).getDestinstaion() == 1 && (direction == -1 || direction == 0)) {
                 pending = 1;
                 break;
             }
@@ -29,29 +29,29 @@ int Scheduler::decide() {
         return 0;
     }
     //刚到达边界
-    if (((currentFloor == 1) || (currentFloor == 10)) && lastDecision != 0) {
+    if (((currentFloor == 1) || (currentFloor == 10)) && direction != 0) {
         for (auto iter = insidePassengers.begin(); iter != insidePassengers.end(); iter++) {
             if ((*iter).getDestinstaion() == currentFloor) {
-                lastDecision = 0;
+                direction = 0;
                 return 0;
             }
         }
     }
     //已在边界停留
-    if (lastDecision == 0) {
+    if (direction == 0) {
         if (triggeredPassengers.size() == 0 && world.getElevator()->getInsidePassengers().size() == 0) {
             return 0;
         } else {
             if (currentFloor == 1) {
-                lastDecision = 1;
+                direction = 1;
                 return 1;
             } else {
-                lastDecision = -1;
+                direction = -1;
                 return -1;
             }
         }
     }
 
 
-    return lastDecision;
+    return direction;
 }

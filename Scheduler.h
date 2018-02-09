@@ -10,7 +10,7 @@
 class Scheduler {
 private:
     World &world;
-    int lastDecision = 0;
+    int direction = 0;
 public:
     Scheduler(World &world);
 
