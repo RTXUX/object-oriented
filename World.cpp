@@ -58,7 +58,10 @@ int World::run() {
             //停靠时出厢并进厢
             case 0:
                 printf("%d时，停靠在%d层\n", time, elevator->getCurrentFloor());
-                elevator->unloadPassengers(totalWaitTime);
+                //仅在1层和10层会有人出厢
+                if (elevator->getCurrentFloor() == 1 || elevator->getCurrentFloor() == 10) {
+                    elevator->unloadPassengers(totalWaitTime);
+                }
                 for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end();) {
                     if ((*iter).getInitialFloor() == elevator->getCurrentFloor()) {
                         elevator->loadPassenger(std::move(*iter));
