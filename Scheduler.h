@@ -10,7 +10,8 @@
 class Scheduler {
 private:
     World &world;
-    int direction = 0;
+    int stopped = 1;
+    int target = 1;
 public:
     Scheduler(World &world);
 

@@ -1,9 +1,10 @@
 //
 // Created by rtxux on 2018/2/9.
 //
-
+#include <cmath>
 #include "Scheduler.h"
 
+using namespace std;
 Scheduler::Scheduler(World &world) : world(world) {}
 
 int Scheduler::decide() {
@@ -11,47 +12,76 @@ int Scheduler::decide() {
     auto triggeredPassengers = this->world.getTriggeredPassengers();
     int currentFloor = world.getElevator()->getCurrentFloor();
     auto insidePassengers = world.getElevator()->getInsidePassengers();
-    //处理已触发请求的入厢
-    for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end(); iter++) {
-        if ((*iter).getInitialFloor() == currentFloor) {
-            if ((*iter).getDestinstaion() == 10 && (direction == 1 || direction == 0)) {
-                pending = 1;
-                break;
-            }
-            if ((*iter).getDestinstaion() == 1 && (direction == -1 || direction == 0)) {
-                pending = 1;
-                break;
-            }
+    for (auto iter = insidePassengers.begin(); iter != insidePassengers.end(); iter++) {
+        if (iter.base()->getDestinstaion() == currentFloor) {
+            return 0;
         }
     }
-    //需要入厢
-    if (pending == 1) {
-        return 0;
+    if (target == currentFloor) {
+        if (!stopped) {
+            stopped = 1;
+            return 0;
+        } else {
+            if (currentFloor == 1) {
+                if (!insidePassengers.empty()) {
+                    target = 10;
+                }
+                for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end(); iter++) {
+                    target = max(target, iter.base()->getInitialFloor());
+                }
+
+            } else if (currentFloor == 10) {
+                if (!insidePassengers.empty()) {
+                    target = 1;
+                }
+                for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end(); iter++) {
+                    target = min(target, iter.base()->getInitialFloor());
+                }
+            }
+            /*else{
+                int C1=0,C10=0;
+                for (auto iter=insidePassengers.begin();iter!=insidePassengers.end();iter++)
+                {
+                    if (iter.base()->getDestinstaion()==10)
+                    {
+                        C10++;
+                    }
+                    else
+                    {
+                        C1++;
+                    }
+                }
+                if(C10>C1)
+                {
+                    target=10;
+                }
+                else
+                {
+                    target=1;
+                }
+            }*/
+        }
     }
-    //刚到达边界
-    if (((currentFloor == 1) || (currentFloor == 10)) && direction != 0) {
-        for (auto iter = insidePassengers.begin(); iter != insidePassengers.end(); iter++) {
-            if ((*iter).getDestinstaion() == currentFloor) {
-                direction = 0;
+    for (auto iter = triggeredPassengers.begin(); iter != triggeredPassengers.end(); iter++) {
+        if (iter.base()->getInitialFloor() == currentFloor) {
+            if (iter.base()->getDestinstaion() == 10 && target - currentFloor >= 0) {
+                target = 10;
+                return 0;
+            }
+            if (iter.base()->getDestinstaion() == 1 && target - currentFloor <= 0) {
+                target = 1;
                 return 0;
             }
         }
     }
-    //已在边界停留
-    if (direction == 0) {
-        if (triggeredPassengers.size() == 0 && world.getElevator()->getInsidePassengers().size() == 0) {
-            return 0;
-        } else {
-            if (currentFloor == 1) {
-                direction = 1;
-                return 1;
-            } else {
-                direction = -1;
-                return -1;
-            }
-        }
+    if (target > currentFloor) {
+        return 1;
+    }
+    if (target < currentFloor) {
+        return -1;
     }
 
 
-    return direction;
+
+
 }
