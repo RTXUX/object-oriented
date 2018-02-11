@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 using namespace std;
+
 #include "Scheduler.h"
 
 enum {
@@ -129,13 +130,13 @@ int Scheduler::decide() {
         }
     } else {
         if (destTime[UP] < destTime[DOWN]) {
-            if (destTime[STOP] * (upExtra + 1) > stopCount * ((abs((int) upFloor - (int) currentFloor)) * 2 + 1)) {
+            if (destTime[STOP] * (upExtra + 1) > stopCount * ((abs(upFloor - currentFloor)) * 2 + 1)) {
                 return 1;
             } else {
                 return 0;
             }
         } else {
-            if (destTime[STOP] * (downExtra + 1) > stopCount * ((abs((int) downFloor - (int) currentFloor)) * 2 + 1)) {
+            if (destTime[STOP] * (downExtra + 1) > stopCount * ((abs(downFloor - currentFloor)) * 2 + 1)) {
                 return -1;
             } else {
                 return 0;
