@@ -39,6 +39,7 @@ World::World() {
 
 int World::run() {
     int totalWaitTime = 0;
+    int lastStop = 0;
     while (true) {
         //已完成所有运输
         if (elevator->getDelivered() == NUM_PASSENGERS) {
@@ -53,11 +54,14 @@ int World::run() {
                 iter++;
             }
         }
+
         //决策并执行
         switch (scheduler->decide()) {
             //停靠时出厢并进厢
             case 0:
-                printf("%d时，停靠在%d层\n", time, elevator->getCurrentFloor());
+                if (!lastStop) {
+                    printf("%d时，停靠在%d层\n", time, elevator->getCurrentFloor());
+                }
                 //仅在1层和10层会有人出厢
                 if (elevator->getCurrentFloor() == 1 || elevator->getCurrentFloor() == 10) {
                     elevator->unloadPassengers(totalWaitTime);
@@ -70,12 +74,15 @@ int World::run() {
                         iter++;
                     }
                 }
+                lastStop = 1;
                 break;
             case 1:
                 elevator->moveUp();
+                lastStop = 0;
                 break;
             case -1:
                 elevator->moveDown();
+                lastStop = 0;
                 break;
         }
         time++;
