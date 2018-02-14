@@ -3,6 +3,8 @@
 #include "World.h"
 
 int main() {
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     World world;
     Elevator elevator(world);
     Scheduler scheduler(world);
