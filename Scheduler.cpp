@@ -92,9 +92,9 @@ int Scheduler::decide() {
         if (destNum[STOP]) {
             if (initialFloor == currentFloor) {
                 stopCount++;
-                if (destination == 1) {
+                if (destination < currentFloor) {
                     upExtra = currentFloor - destination;
-                } else if (destination == 10) {
+                } else if (destination > currentFloor) {
                     downExtra = destination - currentFloor;
                 }
             }
